@@ -1,0 +1,71 @@
+# Agentic Investor - advisory cron schedule
+# Timezone: Asia/Shanghai. Install with:
+#   crontab ~/.openclaw/workspace/agentic-investor/agentic-investor-cron.txt
+#
+# Safety: these entries call deterministic advisory scripts. They do not run
+# natural-language agents and do not place live orders.
+#
+# If your system's cron timezone is not Asia/Shanghai, set CRON_TZ if supported
+# or convert the times manually.
+
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+# Uncomment if your cron supports CRON_TZ and the host is not already on Asia/Shanghai.
+# CRON_TZ=Asia/Shanghai
+PYTHON_BIN=/usr/bin/python3
+AGENTIC_INVESTOR_HOME=$HOME/.openclaw/workspace/agentic-investor
+
+# === Daily workflow, US market summer time mapped to Beijing time ===
+# Market data refresh only runs during US regular trading hours.
+# intraday_monitor is the one-stop 15m task:
+# market snapshot + paper MTM + conditional playbook + paper fills +
+# intel/social/event radar + order intents + dashboard snapshot + Firebase publish.
+
+# 21:30 and 21:45 opening-window paper monitor
+30,45 21 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh intraday_monitor >> /tmp/agentic-investor-intraday.log 2>&1
+
+# 22:00-23:45 regular evening paper monitor
+0,15,30,45 22-23 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh intraday_monitor >> /tmp/agentic-investor-intraday.log 2>&1
+
+# 00:00-03:45 late-session paper monitor, next Beijing calendar day
+0,15,30,45 0-3 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh intraday_monitor >> /tmp/agentic-investor-intraday.log 2>&1
+
+# 23:50 sleep-time decision refresh after the 23:45 market snapshot
+50 23 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh research_committee >> /tmp/agentic-investor-research-committee.log 2>&1
+52 23 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh order_intents >> /tmp/agentic-investor-order-intents.log 2>&1
+54 23 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh dashboard_snapshot >> /tmp/agentic-investor-dashboard-snapshot.log 2>&1
+56 23 * * 1-5 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh firebase_publish_snapshot >> /tmp/agentic-investor-firebase-publish.log 2>&1
+
+# China daytime after-close review: do not refresh market data here.
+# This block refreshes news/social/event radar, earnings risk, committee review,
+# order intents, dashboard snapshot, and Firestore publish based on the already-generated
+# US-session market snapshot.
+0 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh intel_monitor >> /tmp/agentic-investor-intel.log 2>&1
+5 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh social_sentiment_feed >> /tmp/agentic-investor-social.log 2>&1
+10 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh earnings_event_risk >> /tmp/agentic-investor-earnings.log 2>&1
+15 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh research_committee >> /tmp/agentic-investor-research-committee.log 2>&1
+17 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh order_intents >> /tmp/agentic-investor-order-intents.log 2>&1
+20 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh dashboard_snapshot >> /tmp/agentic-investor-dashboard-snapshot.log 2>&1
+22 10 * * 2-6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh firebase_publish_snapshot >> /tmp/agentic-investor-firebase-publish.log 2>&1
+
+# === Weekly workflow ===
+
+30 8 * * 6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh fund_holdings_tracker >> /tmp/agentic-investor-fund-holdings.log 2>&1
+15 9 * * 6 cd "$AGENTIC_INVESTOR_HOME" && "$PYTHON_BIN" scripts/backtest_v2.py >> /tmp/agentic-investor-backtest-v2.log 2>&1
+45 9 * * 6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh review_dashboard >> /tmp/agentic-investor-review-dashboard.log 2>&1
+50 9 * * 6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh dashboard_snapshot >> /tmp/agentic-investor-dashboard-snapshot.log 2>&1
+0 10 * * 6 cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh weekly_rebalance >> /tmp/agentic-investor-weekly.log 2>&1
+
+# === Monthly workflow ===
+
+30 9 1 * * cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh congress_trades_tracker >> /tmp/agentic-investor-congress.log 2>&1
+0 10 1 * * cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh monthly_review >> /tmp/agentic-investor-monthly.log 2>&1
+5 10 1 * * cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh dashboard_snapshot >> /tmp/agentic-investor-dashboard-snapshot.log 2>&1
+
+# === Quarterly workflow ===
+
+45 9 1 1,4,7,10 * cd "$AGENTIC_INVESTOR_HOME" && bash scripts/cron_entry.sh congress_trades_tracker >> /tmp/agentic-investor-congress-quarterly.log 2>&1
+
+# Winter time reference: shift the daily US-market entries one hour later
+# during US standard time if your scheduling host does not handle exchange
+# calendars automatically.
