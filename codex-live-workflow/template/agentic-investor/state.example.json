@@ -1,0 +1,14 @@
+{
+  "paused": false,
+  "mode": "SIMULATE",
+  "execution_mode": "ADVISORY_ONLY",
+  "allow_order_placement": false,
+  "approved_account_id": null,
+  "real_account_read_enabled": false,
+  "last_check": null,
+  "notes": [
+    "Copy this file to state.json on the target machine if no state file exists.",
+    "Do not put account ids, passwords, tokens, or real account snapshots in this file."
+  ]
+}
+
