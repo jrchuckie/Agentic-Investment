@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-03T21:00:16+08:00",
+  "policy": {
+    "purpose": "Macro and policy overlay for position sizing, cash level, and option risk.",
+    "order_policy": "Macro state can reduce risk, require review, or block new exposure. It must not create buy orders by itself.",
+    "freshness_rule": "Refresh Fed target range, rate-path bias, VIX, 10Y yield, and major political event risk before weekly rebalance."
+  },
+  "current": {
+    "fed_funds_target_range": "3.50%-3.75%",
+    "fed_policy_bias": "DATA_DEPENDENT",
+    "rate_path_bias": "HIGHER_FOR_LONGER",
+    "inflation_risk": "UNKNOWN",
+    "growth_risk": "UNKNOWN",
+    "liquidity_regime": "UNKNOWN",
+    "political_event_risk": "NORMAL",
+    "notes": "FOMC maintained target range; inflation elevated and Middle East developments contribute to high uncertainty.",
+    "fed_source": "Federal Reserve FOMC statement, 2026-04-29: https://www.federalreserve.gov/newsevents/pressreleases/monetary20260429a.htm"
+  },
+  "indicator_watch": [
+    {
+      "name": "Fed funds target range",
+      "source_preference": "Federal Reserve FOMC official statement",
+      "current_value": null,
+      "interpretation": "Higher-for-longer or renewed hikes reduce gross exposure and option risk."
+    },
+    {
+      "name": "10Y Treasury yield",
+      "source_preference": "US Treasury or FRED",
+      "current_value": null,
+      "interpretation": "Fast yield spikes are usually a headwind for long-duration growth stocks."
+    },
+    {
+      "name": "VIX",
+      "source_preference": "CBOE or market data",
+      "current_value": null,
+      "interpretation": "Elevated volatility increases stop-out risk and lowers recommended gross exposure."
+    },
+    {
+      "name": "US dollar index / liquidity proxy",
+      "source_preference": "market data",
+      "current_value": null,
+      "interpretation": "A tightening liquidity backdrop lowers tolerance for concentrated satellite bets."
+    },
+    {
+      "name": "Major policy/geopolitical events",
+      "source_preference": "official calendars and high-quality news",
+      "current_value": null,
+      "interpretation": "Tariffs, export controls, elections, and sanctions can override normal technical signals."
+    }
+  ],
+  "exposure_overlays": {
+    "UNKNOWN": {
+      "max_gross_exposure": 0.85,
+      "minimum_cash": 0.15,
+      "new_options_allowed": false,
+      "note": "When macro data is stale or unknown, avoid increasing leverage."
+    },
+    "RISK_ON": {
+      "max_gross_exposure": 1.0,
+      "minimum_cash": 0.1,
+      "new_options_allowed": true,
+      "note": "Use only when trend and macro both support risk."
+    },
+    "HAWKISH": {
+      "max_gross_exposure": 0.75,
+      "minimum_cash": 0.25,
+      "new_options_allowed": false,
+      "note": "Fed tightening/higher-for-longer regime: prefer quality, cash, and smaller satellite weights."
+    },
+    "RISK_OFF": {
+      "max_gross_exposure": 0.6,
+      "minimum_cash": 0.4,
+      "new_options_allowed": false,
+      "note": "Macro or volatility shock: block new satellite exposure and review stops."
+    }
+  }
+}
