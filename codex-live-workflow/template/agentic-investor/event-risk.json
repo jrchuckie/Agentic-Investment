@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-04",
+  "policy": {
+    "purpose": "Daily earnings and event-risk overlay for advisory-only stock and option decisions.",
+    "broker_execution_enabled": false,
+    "default_lookahead_days": 14,
+    "earnings_blackout_days": 2,
+    "earnings_review_days": 7,
+    "option_policy": {
+      "same_day_or_next_2_days": "Block new option risk unless a separate earnings-volatility thesis is explicitly written and user-approved.",
+      "within_7_days": "Require manual review for calls, puts, covered calls, cash-secured puts, and spreads.",
+      "post_earnings": "Wait for the first post-earnings reaction to settle before adding directional option risk."
+    }
+  },
+  "sources": [
+    {
+      "id": "nasdaq_earnings_calendar",
+      "enabled": true,
+      "source_type": "nasdaq_public_api",
+      "url_template": "https://api.nasdaq.com/api/calendar/earnings?date={date}",
+      "notes": "Public calendar endpoint. Availability can vary; keep reports resilient when blocked."
+    }
+  ],
+  "manual_events": [
+    {
+      "symbol": "PLTR",
+      "company": "Palantir Technologies",
+      "earnings_date": "2026-05-04",
+      "time": "after_market_or_unspecified",
+      "eps_forecast": "0.2786",
+      "source": "manual_seed_investing_com_stocktwits",
+      "source_url": "https://www.investing.com/earnings-calendar/",
+      "notes": "Seeded because local public calendar fetch was network-blocked; verify before staging options."
+    },
+    {
+      "symbol": "AMD",
+      "company": "Advanced Micro Devices",
+      "earnings_date": "2026-05-05",
+      "time": "unspecified",
+      "eps_forecast": "",
+      "source": "manual_seed_stocktwits",
+      "source_url": "https://stocktwits.com/sentiment/calendar/2026-05-04",
+      "notes": "Seeded because local public calendar fetch was network-blocked; verify before staging options."
+    }
+  ],
+  "option_action_rules": [
+    {
+      "risk_level": "HIGH",
+      "condition": "earnings_days <= earnings_blackout_days",
+      "call_action": "Do not open new long calls or covered calls through the event; review closing or rolling short calls.",
+      "put_action": "Do not open new long puts or cash-secured puts through the event; review assignment and gap risk.",
+      "spread_action": "Only defined-risk paper trades with explicit max loss and post-earnings expiry should be considered."
+    },
+    {
+      "risk_level": "REVIEW",
+      "condition": "earnings_days <= earnings_review_days",
+      "call_action": "Reduce size or use spreads; avoid buying rich IV without a catalyst thesis.",
+      "put_action": "Use smaller defined-risk structures; avoid selling premium if assignment is not desired.",
+      "spread_action": "Prefer defined-risk spreads and expiry at least 30 days beyond earnings."
+    }
+  ]
+}
