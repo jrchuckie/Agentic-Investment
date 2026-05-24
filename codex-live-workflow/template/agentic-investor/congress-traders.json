@@ -1,0 +1,154 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-04",
+  "policy": {
+    "purpose": "Monthly/quarterly congressional trading and portfolio-signal tracker.",
+    "broker_execution_enabled": false,
+    "official_verification_required": true,
+    "disclosure_lag_note": "STOCK Act transaction disclosures can be delayed; use this as idea-source only, then verify against official House/Senate disclosures before acting."
+  },
+  "settings": {
+    "lookback_days": 365,
+    "max_report_trades": 60,
+    "min_signal_score": 0.01
+  },
+  "sources": [
+    {
+      "id": "house_disclosures",
+      "source_type": "official_reference",
+      "url": "https://disclosures-clerk.house.gov/FinancialDisclosure",
+      "notes": "Official House disclosure search. Manual/official verification source."
+    },
+    {
+      "id": "senate_disclosures",
+      "source_type": "official_reference",
+      "url": "https://efdsearch.senate.gov/search/",
+      "notes": "Official Senate eFD search. Manual/official verification source."
+    }
+  ],
+  "tracked_members": [
+    {
+      "id": "nancy_pelosi",
+      "display_name": "Nancy Pelosi",
+      "chamber": "House",
+      "party": "D",
+      "state": "CA",
+      "performance_weight": 1.0,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/nancy-pelosi",
+        "https://www.capitoltrades.com/politicians/P000197"
+      ],
+      "notes": "Seeded because user explicitly requested Pelosi-style portfolio tracking."
+    },
+    {
+      "id": "ro_khanna",
+      "display_name": "Ro Khanna",
+      "chamber": "House",
+      "party": "D",
+      "state": "CA",
+      "performance_weight": 0.75,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/ro-khanna"
+      ],
+      "notes": "High-volume disclosure profile; useful for signal breadth, not necessarily alpha."
+    },
+    {
+      "id": "michael_mccaul",
+      "display_name": "Michael McCaul",
+      "chamber": "House",
+      "party": "R",
+      "state": "TX",
+      "performance_weight": 0.75,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/michael-mccaul"
+      ],
+      "notes": "Known active disclosure profile; verify official filings."
+    },
+    {
+      "id": "josh_gottheimer",
+      "display_name": "Josh Gottheimer",
+      "chamber": "House",
+      "party": "D",
+      "state": "NJ",
+      "performance_weight": 0.7,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/josh-gottheimer"
+      ],
+      "notes": "Known active disclosure profile; verify official filings."
+    },
+    {
+      "id": "tom_suozzi",
+      "display_name": "Tom Suozzi",
+      "chamber": "House",
+      "party": "D",
+      "state": "NY",
+      "performance_weight": 0.7,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/tom-suozzi"
+      ],
+      "notes": "Seeded for performance watchlist; verify current ranking each review."
+    },
+    {
+      "id": "tim_moore",
+      "display_name": "Tim Moore",
+      "chamber": "House",
+      "party": "R",
+      "state": "NC",
+      "performance_weight": 0.65,
+      "profile_urls": [
+        "https://www.govtrades.com/tracker/tim-moore"
+      ],
+      "notes": "Seeded for performance watchlist; verify current ranking each review."
+    }
+  ],
+  "manual_seed_transactions": [
+    {
+      "member_id": "nancy_pelosi",
+      "member": "Nancy Pelosi",
+      "transaction_date": "2025-06-20",
+      "disclosure_date": "2025-07-02",
+      "symbol": "AVGO",
+      "asset": "Broadcom Inc.",
+      "transaction_type": "purchase",
+      "amount_range": "$1,000,001 - $5,000,000",
+      "source": "manual_seed_public_dashboard",
+      "notes": "Seed only; verify against official disclosure before use."
+    },
+    {
+      "member_id": "nancy_pelosi",
+      "member": "Nancy Pelosi",
+      "transaction_date": "2025-01-14",
+      "disclosure_date": "2025-01-21",
+      "symbol": "GOOGL",
+      "asset": "Alphabet Inc.",
+      "transaction_type": "purchase",
+      "amount_range": "$500,001 - $1,000,000",
+      "source": "manual_seed_public_dashboard",
+      "notes": "Seed only; verify against official disclosure before use."
+    },
+    {
+      "member_id": "nancy_pelosi",
+      "member": "Nancy Pelosi",
+      "transaction_date": "2025-01-14",
+      "disclosure_date": "2025-01-21",
+      "symbol": "AMZN",
+      "asset": "Amazon.com Inc.",
+      "transaction_type": "purchase",
+      "amount_range": "$500,001 - $1,000,000",
+      "source": "manual_seed_public_dashboard",
+      "notes": "Seed only; verify against official disclosure before use."
+    },
+    {
+      "member_id": "nancy_pelosi",
+      "member": "Nancy Pelosi",
+      "transaction_date": "2025-10-22",
+      "disclosure_date": "2025-11-06",
+      "symbol": "AAPL",
+      "asset": "Apple Inc.",
+      "transaction_type": "sale_partial",
+      "amount_range": "$1,000,001 - $5,000,000",
+      "source": "manual_seed_public_dashboard",
+      "notes": "Seed only; verify against official disclosure before use."
+    }
+  ]
+}
