@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-04T00:00:00+08:00",
+  "policy": {
+    "purpose": "Read-only market, macro, news, and social sentiment feeds for paper trading decisions.",
+    "broker_execution_enabled": false,
+    "account_read_enabled": false,
+    "trading_policy": "Data can inform advisory/paper decisions only; it cannot submit live orders."
+  },
+  "current_local_feeds": [
+    {
+      "id": "openbb_preferred",
+      "label": "OpenBB preferred provider layer",
+      "coverage": ["US equities", "ETFs", "indices", "rates", "FX where provider supports it"],
+      "used_by": ["market_snapshot"],
+      "status": "preferred_optional",
+      "note": "The code now tries OpenBB first when the package is installed, then falls back to public macro feeds and moomoo OpenD."
+    },
+    {
+      "id": "moomoo_opend_readonly",
+      "label": "moomoo OpenD read-only quotes/history",
+      "coverage": ["US equities", "ETFs", "watchlist history"],
+      "used_by": ["market_snapshot", "paper_fill_engine"],
+      "status": "fallback"
+    }
+  ],
+  "true_macro_feeds": [
+    {
+      "id": "fred_vixcls",
+      "label": "FRED VIXCLS / CBOE Volatility Index",
+      "url": "https://fred.stlouisfed.org/series/VIXCLS",
+      "download_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS",
+      "coverage": ["VIX spot"],
+      "api_key_required": false,
+      "status": "active"
+    },
+    {
+      "id": "fred_dgs10",
+      "label": "FRED DGS10 / 10-Year Treasury Constant Maturity Rate",
+      "url": "https://fred.stlouisfed.org/series/DGS10",
+      "download_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10",
+      "coverage": ["10Y Treasury yield"],
+      "api_key_required": false,
+      "status": "active"
+    },
+    {
+      "id": "yahoo_usdcnh",
+      "label": "Yahoo Finance chart feed for USD/CNH",
+      "url": "https://finance.yahoo.com/quote/USDCNH=X",
+      "download_url": "https://query1.finance.yahoo.com/v8/finance/chart/USDCNH=X?range=6mo&interval=1d",
+      "coverage": ["USD/CNH"],
+      "api_key_required": false,
+      "status": "active_with_stooq_fallback"
+    },
+    {
+      "id": "yahoo_vix_tnx_fallback",
+      "label": "Yahoo Finance chart fallback for VIX and 10Y",
+      "download_url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=6mo&interval=1d",
+      "coverage": ["VIX spot via ^VIX", "10Y yield via ^TNX"],
+      "api_key_required": false,
+      "status": "fallback_when_fred_blocked"
+    },
+    {
+      "id": "stooq_usdcnh",
+      "label": "Stooq daily USD/CNH fallback",
+      "download_url": "https://stooq.com/q/d/l/?s=usdcnh&i=d",
+      "coverage": ["USD/CNH fallback"],
+      "api_key_required": false,
+      "status": "fallback"
+    }
+  ],
+  "news_and_social_feeds": [
+    {
+      "id": "gdelt_doc_api",
+      "label": "GDELT DOC 2.1 API",
+      "url": "https://www.gdeltproject.org/",
+      "coverage": ["global news search", "article list", "theme monitoring"],
+      "api_key_required": false,
+      "status": "active"
+    },
+    {
+      "id": "reddit_public_rss",
+      "label": "Reddit public RSS searches",
+      "coverage": ["r/stocks", "r/investing", "r/options"],
+      "api_key_required": false,
+      "status": "active_noisy_sentiment"
+    },
+    {
+      "id": "x_official_api",
+      "label": "X official API",
+      "coverage": ["selected investor/operator accounts", "direct social posts"],
+      "api_key_required": true,
+      "credential_env": "X_BEARER_TOKEN",
+      "status": "configured_but_disabled"
+    }
+  ],
+  "candidate_platforms": [
+    {
+      "id": "openbb",
+      "label": "OpenBB",
+      "url": "https://github.com/OpenBB-finance/OpenBB",
+      "role": "Candidate unified data access layer for analysts, quants, and AI agents.",
+      "recommended_use": "Keep current lightweight feeds now; evaluate OpenBB next for provider normalization, Python workflows, and possible MCP/agent integration."
+    }
+  ]
+}
