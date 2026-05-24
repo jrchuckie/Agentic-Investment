@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-03T00:00:00+08:00",
+  "default_target": "github_agentic_investment",
+  "targets": {
+    "github_agentic_investment": {
+      "type": "github_repository",
+      "url": "https://github.com/jrchuckie/Agentic-Investment",
+      "purpose": "Publish Agentic Investment demos, review dashboards, reports, and selected project artifacts.",
+      "default_artifact_paths": [
+        "reports/*_demo_deck.html",
+        "reports/*_review_dashboard.html",
+        "reports/*_backtest*.md",
+        "reports/*_openalice_integration_review.md",
+        "reports/*_frontend_slides_research.md"
+      ],
+      "publish_policy": {
+        "user_requested_default": true,
+        "live_trading_data_allowed": false,
+        "broker_credentials_allowed": false,
+        "account_snapshots_allowed": false,
+        "include_advisory_reports_only": true,
+        "default_language": "zh-CN",
+        "note": "Before publishing, exclude secrets, broker/account data, local logs, and any private credentials."
+      },
+      "github_pages": {
+        "enabled_source": "main:/docs",
+        "web_url": "https://jrchuckie.github.io/Agentic-Investment/",
+        "manager_script": "scripts/manage_github_pages.py",
+        "required_fine_grained_token_permissions": [
+          "Contents: Read and write",
+          "Pages: Read and write",
+          "Administration: Read and write"
+        ],
+        "official_docs": "https://docs.github.com/en/rest/pages/pages"
+      }
+    }
+  }
+}
