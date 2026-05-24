@@ -1,0 +1,539 @@
+{
+  "strategy_name": "AI_Surrogacy_Fund_40PCT",
+  "version": "2.0-fused",
+  "base_currency": "USD",
+  "target_amount": 300000,
+  "target_date": "2028-05-01",
+  "initial_capital_estimate": 135000,
+  "monthly_dca": 3000,
+  "bonus_injections": [
+    {"date": "2026-06", "amount_estimate": 23000},
+    {"date": "2027-06", "amount_estimate": 42000}
+  ],
+  "fallback_asset": {"description": "XHS Options 2500 shares @$40", "value_estimate": 100000},
+  "universe": [
+    "NVDA", "GOOG", "AMZN", "MSFT",
+    "PANW", "CRWD", "PLTR", "META"
+  ],
+
+  "initial_prices_reference": {
+    "NVDA": 198,
+    "GOOG": 383,
+    "AMZN": 210,
+    "MSFT": 425,
+    "META": 609,
+    "PANW": 160,
+    "CRWD": null,
+    "PLTR": null
+  },
+
+  "market_state_rules": {
+    "BULL": {
+      "condition": {
+        "all": [
+          "NVDA_PRICE > NVDA_MA50",
+          "NASDAQ_INDEX > NASDAQ_MA50"
+        ]
+      },
+      "allocation": {
+        "stocks": 0.70,
+        "options": 0.20,
+        "cash": 0.10
+      }
+    },
+    "SIDEWAYS": {
+      "condition": {
+        "any": [
+          "NVDA_PRICE >= NVDA_MA50 AND NVDA_PRICE <= NVDA_MA200"
+        ]
+      },
+      "allocation": {
+        "stocks": 0.60,
+        "options": 0.10,
+        "cash": 0.30
+      }
+    },
+    "BEAR": {
+      "condition": {
+        "any": [
+          "NVDA_PRICE < NVDA_MA200"
+        ]
+      },
+      "allocation": {
+        "stocks": 0.40,
+        "options": 0.00,
+        "cash": 0.60
+      }
+    }
+  },
+
+  "portfolio_rules": {
+    "allocation_resolution": "market_state_rules defines top-level stocks/options/cash targets; stock_bucket_split divides the stock allocation; risk_management and cash_reserve override all target allocations.",
+    "stock_bucket_split": {
+      "core": 0.70,
+      "satellite": 0.30
+    },
+    "tier_core": {
+      "stocks": ["NVDA", "GOOG", "AMZN", "MSFT"],
+      "max_per_position": 0.20,
+      "stop_loss": -0.20,
+      "stop_loss_action": "REDUCE_HALF"
+    },
+    "tier_satellite": {
+      "stocks": ["PANW", "CRWD", "PLTR", "META"],
+      "max_per_position": 0.10,
+      "stop_loss": -0.25,
+      "stop_loss_action": "SELL_ALL"
+    },
+    "tier_options": {
+      "target_weight": 0.20,
+      "max_per_trade": 0.05,
+      "max_total": 0.20
+    },
+    "cash_reserve": {
+      "minimum": 0.10,
+      "override_in_bull": false
+    },
+    "rebalancing": {
+      "frequency": "WEEKLY",
+      "trigger_weight_deviation": 0.05,
+      "execution": "USER_CONFIRM_REQUIRED_FOR_REAL_ACCOUNT"
+    }
+  },
+
+  "execution_policy": {
+    "default_execution_mode": "ADVISORY_ONLY",
+    "allow_order_placement_default": false,
+    "simulate_auto_requires": ["mode == SIMULATE", "execution_mode == SIMULATE_AUTO", "allow_order_placement == true"],
+    "real_account_policy": "Generate approval packets only. Do not unlock trading or place REAL orders from unattended automation.",
+    "password_policy": "Do not store MOOMOO_TRADE_PASSWORD or any live trading password in this project."
+  },
+
+  "broker_api": {
+    "sdk_family": "moomoo OpenAPI / futu Python SDK",
+    "official_docs_checked": "2026-05-03",
+    "quote_methods": {
+      "history_kline": "request_history_kline",
+      "stock_quote": "get_stock_quote",
+      "market_snapshot": "get_market_snapshot"
+    },
+    "trade_methods": {
+      "account_list": "get_acc_list",
+      "account_info": "accinfo_query",
+      "max_tradable_quantity": "acctradinginfo_query",
+      "positions": "position_list_query",
+      "place_order": "place_order",
+      "modify_or_cancel_order": "modify_order",
+      "open_orders": "order_list_query",
+      "deals": "deal_list_query"
+    }
+  },
+
+  "human_interaction_rules": {
+    "watchlist_file": "watchlist.json",
+    "macro_file": "macro-regime.json",
+    "allowed_user_actions": [
+      "add_candidate",
+      "exclude_symbol",
+      "unexclude_symbol",
+      "request_watchlist_review",
+      "request_backtest_with_extra_or_excluded_symbols"
+    ],
+    "candidate_to_order_gates": [
+      "ticker_normalized",
+      "quote_or_manual_data_available",
+      "liquidity_review_passed",
+      "thesis_and_invalidation_written",
+      "macro_overlay_allows_new_risk",
+      "position_size_cap_defined",
+      "explicit_user_approval"
+    ],
+    "excluded_symbol_policy": "Excluded symbols must be ignored by watchlist review and future strategy candidate expansion unless explicitly unexcluded."
+  },
+
+  "order_intent_rules": {
+    "workflow": "TRADING_AS_GIT_ADVISORY",
+    "staged_orders_file": "data/trading/staged-orders.json",
+    "commits_file": "data/trading/commits.jsonl",
+    "event_log_file": "data/event-log/events.jsonl",
+    "broker_execution_enabled": false,
+    "commands": [
+      "scripts/order_intent.py stage",
+      "scripts/order_intent.py guard",
+      "scripts/order_intent.py commit",
+      "scripts/order_intent.py reject",
+      "scripts/order_intent.py review"
+    ],
+    "commit_policy": "A commit is an auditable advisory packet, not permission to place a broker order.",
+    "guard_pipeline": [
+      "schema",
+      "safety_mode",
+      "symbol",
+      "thesis",
+      "macro",
+      "earnings_event",
+      "position_size",
+      "market_data"
+    ],
+    "baseline_symbols": ["QQQ", "SPY", "SMH", "SOXX"],
+    "baseline_symbol_policy": "Configured universe, core/satellite stocks, option underlyings, and baseline ETFs pass the symbol guard unless excluded. New social/watchlist names still require manual thesis review.",
+    "hard_blocks": [
+      "paused_strategy",
+      "broker_execution_requested",
+      "excluded_symbol",
+      "unsupported_buy_market_data",
+      "risk_off_new_buy",
+      "blocked_new_option_risk",
+      "position_size_limit_exceeded",
+      "missing_required_audit_fields"
+    ]
+  },
+
+  "social_sentiment_rules": {
+    "sources_file": "intelligence-sources.json",
+    "monitor_script": "scripts/intel_monitor.py",
+    "derived_feed_script": "scripts/social_sentiment_feed.py",
+    "latest_cache": "data/social_sentiment/latest.json",
+    "daily_cron_id": "daily-us-market-sentiment-brief",
+    "dashboard_section": "dashboard#sentiment",
+    "sources": ["user_supplied_links", "reddit_public_sources_if_available", "rss_public_feeds", "x_api_if_configured"],
+    "ranking_inputs": ["mention_velocity", "source_quality", "novelty", "catalyst_presence", "liquidity", "price_trend"],
+    "hard_limits": {
+      "social_signal_max_weight": 0.15,
+      "standalone_social_buy_signal": false
+    },
+    "judgement_model_use": [
+      "confirm_or_challenge_current_market_narrative",
+      "flag_crowded_consensus_before_chasing",
+      "surface_symbol_or_theme_watch_items_for_human_review",
+      "tighten_invalidation_or_reduce_size_when_social_crowding_is_high"
+    ],
+    "notes": "Social buzz can add a name to research and adjust confidence/crowding, but cannot override liquidity, macro, event-risk, position sizing, or user approval gates."
+  },
+
+  "review_visualization_rules": {
+    "script": "scripts/review_dashboard.py",
+    "default_output": "reports/YYYY-MM-DD_weekly_review_dashboard.html",
+    "formats": ["interactive_static_html", "markdown_report", "optional_pptx_via_presentations_skill"],
+    "frontend_options_researched": ["frontend-slides", "static_html", "Slidev", "reveal.js", "Marp", "Apache ECharts", "Plotly.js"],
+    "adopted_reference": "https://github.com/zarazhangrui/frontend-slides",
+    "default_policy": "Use frontend-slides-inspired dependency-free static HTML for weekly/quarterly interactive reviews unless the user asks for PPTX or a richer frontend app."
+  },
+
+  "publishing_rules": {
+    "targets_file": "publish-targets.json",
+    "default_target": "https://github.com/jrchuckie/Agentic-Investment",
+    "publishable_artifacts": [
+      "HTML demo decks",
+      "HTML review dashboards",
+      "selected advisory Markdown reports"
+    ],
+    "never_publish": [
+      "broker credentials",
+      "account IDs",
+      "account snapshots",
+      "private logs",
+      "live trading secrets"
+    ]
+  },
+
+  "macro_policy_rules": {
+    "macro_file": "macro-regime.json",
+    "refresh_frequency": "DAILY_CHECK_AND_WEEKLY_FULL_REVIEW",
+    "risk_overrides": {
+      "UNKNOWN": {"max_gross_exposure": 0.85, "minimum_cash": 0.15, "new_options_allowed": false},
+      "HAWKISH": {"max_gross_exposure": 0.75, "minimum_cash": 0.25, "new_options_allowed": false},
+      "RISK_OFF": {"max_gross_exposure": 0.60, "minimum_cash": 0.40, "new_options_allowed": false},
+      "RISK_ON": {"max_gross_exposure": 1.00, "minimum_cash": 0.10, "new_options_allowed": true}
+    },
+    "notes": "Fed policy, yields, volatility, liquidity, and political/regulatory shocks can reduce exposure or block new satellite/options risk."
+  },
+
+  "event_risk_rules": {
+    "event_file": "event-risk.json",
+    "daily_script": "scripts/earnings_event_risk.py",
+    "latest_cache": "data/events/earnings_latest.json",
+    "refresh_frequency": "DAILY_PRE_MARKET",
+    "option_event_policy": {
+      "earnings_blackout_days": 2,
+      "earnings_review_days": 7,
+      "new_options_inside_blackout": "BLOCK_UNLESS_EXPLICIT_USER_APPROVAL_AND_DEDICATED_VOL_THESIS",
+      "new_options_inside_review_window": "REQUIRES_MANUAL_REVIEW",
+      "existing_options": "REPORT_CLOSE_ROLL_REDUCE_OR_HOLD_PLAYBOOK_ONLY"
+    },
+    "notes": "Earnings dates gate option ideas and produce call/put playbooks. They do not place or modify broker orders."
+  },
+
+  "congress_trading_rules": {
+    "tracker_file": "congress-traders.json",
+    "tracker_script": "scripts/congress_trades_tracker.py",
+    "latest_cache": "data/congress_trades/latest.json",
+    "refresh_frequency": "MONTHLY_AND_QUARTERLY",
+    "seed_names": ["Nancy Pelosi", "Ro Khanna", "Michael McCaul", "Josh Gottheimer", "Tom Suozzi", "Tim Moore"],
+    "signal_policy": "Congressional trades are idea-source only. Verify official House/Senate disclosures and pass normal macro/event/risk guards before any staged paper trade.",
+    "notes": "STOCK Act disclosure lag means signals are not real-time and should not be treated as standalone buy/sell signals."
+  },
+
+  "health_check_rules": {
+    "script": "scripts/health_check.py",
+    "latest_cache": "data/health/latest.json",
+    "refresh_frequency": "DAILY_PRE_MARKET",
+    "checks": ["json_validity", "opend_quote_path", "report_freshness", "source_cache_errors", "open_staged_intents"],
+    "policy": "Health check reports source gaps and stale state; it does not change execution permissions."
+  },
+
+  "research_committee_rules": {
+    "script": "scripts/research_committee.py",
+    "latest_cache": "data/research_committee/latest.json",
+    "inspiration": "TauricResearch/TradingAgents analyst, debate, trader, risk-manager, and portfolio-manager workflow",
+    "placement": "after deterministic scans and before order-intent review",
+    "roles": ["market_analyst", "technical_analyst", "fundamental_manager_overlay", "event_risk_analyst", "congress_disclosure_analyst", "social_sentiment_analyst", "bull_researcher", "bear_researcher", "trader", "risk_manager", "portfolio_manager"],
+    "policy": "Committee output is an advisory memo only. It must not create broker orders or bypass guard_pipeline.py."
+  },
+
+  "quant_learning_rules": {
+    "reference": "references/low-frequency-quant-learning.md",
+    "preferred_frequency": "LOW_FREQUENCY_DAILY_SCAN_WEEKLY_REBALANCE",
+    "strategy_principles": [
+      "rank_candidates_instead_of_guessing",
+      "combine_momentum_quality_macro_and_risk",
+      "cap_position_size_and_drawdown",
+      "paper_test_high_cagr_variants_before_use",
+      "avoid_high_turnover_unless_edge_exceeds_costs"
+    ]
+  },
+
+  "stock_selection_rules": {
+    "primary_method": "MULTI_FACTOR_AI_TECH_SELECTION",
+    "secondary_method": "AI_SUPPLY_CHAIN_REPRICING",
+    "ranking_logic": "先看基本面/估值/技术面/催化/风险的综合分，再用AI产业链重估因子寻找next-SNDK式候选；forward PE和TTM PE都看，科技成长股更重forward PE但必须检查数据质量。",
+    "factor_weights_pct": {
+      "fundamental": 22,
+      "valuation": 20,
+      "ai_repricing": 12,
+      "catalyst": 15,
+      "technical": 18,
+      "risk": 13
+    },
+    "buy_signal": "DECISION_SCORE >= 78 OR (DECISION_SCORE >= 68 AND AI_REPRICING_SCORE >= 80 AND PRICE_CONFIRMATION_PASS)",
+    "sell_signal": "THESIS_BROKEN OR PRICE < MA50_WITH_VOLUME_CONFIRMATION OR FUNDAMENTAL_GUIDE_DOWN",
+    "replace_rule": "每日Top3 pitch进入人工审批；审批后只写明日conditional paper playbook，不自动实盘。"
+  },
+
+  "ai_supply_chain_repricing_rules": {
+    "source_framework": "Xiaohongshu KOL 美股芒格君：需求传导时间差 + Qual认证周期 + 架构新节点重估",
+    "policy": "该框架只作为叙事/产业链发现overlay，不能绕过估值、财务、技术面、事件风险和用户审批。",
+    "core_questions": [
+      "终端AI需求会沿哪条产业链传导？6/12/18个月分别打到哪一环？",
+      "哪家公司正在客户Qual或导入期，财报暂时难看但价值可能已被锁定？",
+      "新AI架构里多出了哪些老架构没有的必需节点？",
+      "该公司是否仍按旧周期/旧业务估值，而不是按AI新角色估值？",
+      "如果进入paper trade，什么价格/成交量/财报指标能证明判断错了？"
+    ],
+    "seed_symbols": ["SNDK", "ALAB", "MRVL", "CRDO", "LITE", "FN", "CLS", "VRT", "NVT", "POET"],
+    "current_benchmark": "SNDK",
+    "decision_use": "提高研究优先级和pitch排序；最终建仓必须通过多因子评分、数据质量检查、价格确认、风险限制和用户审批。"
+  },
+
+  "option_rules": {
+    "strategies": [
+      {
+        "name": "covered_call",
+        "description": "核心收益增强 — 持有正股后卖OTM call收权利金",
+        "underlyings": ["GOOG", "MSFT"],
+        "entry_condition": {
+          "all": [
+            "POSITION_SHARES >= 100",
+            "IMPLIED_VOLATILITY > 20"
+          ]
+        },
+        "contract_spec": {
+          "strike_type": "OTM",
+          "strike_otm_pct": 0.07,
+          "DTE_min": 30,
+          "DTE_max": 45
+        },
+        "exit_rules": [
+          {
+            "if": "PREMIUM_CAPTURED >= 0.80",
+            "action": "CLOSE_EARLY"
+          },
+          {
+            "if": "EXPIRED",
+            "action": "ROLL_OR_REWRITE"
+          }
+        ],
+        "annual_yield_target": 0.10
+      },
+      {
+        "name": "cash_secured_put",
+        "description": "低价建仓 — 卖OTM put收权利金，被行权则折扣买入",
+        "underlyings": ["PANW", "CRWD"],
+        "entry_condition": {
+          "all": [
+            "NOT_IN_PORTFOLIO OR WANT_TO_ADD",
+            "CASH_AVAILABLE >= STRIKE_PRICE * 100"
+          ]
+        },
+        "contract_spec": {
+          "strike_type": "OTM",
+          "strike_otm_pct": -0.15,
+          "DTE": 30
+        },
+        "exit_rules": [
+          {
+            "if": "EXPIRED_OTM",
+            "action": "KEEP_PREMIUM_AND_REPEAT"
+          },
+          {
+            "if": "ASSIGNED",
+            "action": "SWITCH_TO_COVERED_CALL"
+          }
+        ]
+      },
+      {
+        "name": "bull_call_spread",
+        "description": "杠杆做多 — 买ATM call + 卖OTM call降低成本",
+        "underlyings": ["NVDA", "AMZN"],
+        "entry_condition": {
+          "all": [
+            "HAS_CATALYST (earnings/product_launch within 90d)",
+            "MARKET_STATE == 'BULL' OR MARKET_STATE == 'SIDEWAYS'"
+          ]
+        },
+        "contract_spec": {
+          "long_leg": "ATM",
+          "short_leg": "ATM_PLUS_30_TO_50",
+          "DTE_min": 60,
+          "DTE_max": 90
+        },
+        "exit_rules": [
+          {
+            "if": "SPREAD_RETURN <= -0.50",
+            "action": "STOP_LOSS"
+          },
+          {
+            "if": "SPREAD_RETURN >= 1.0",
+            "action": "SELL_50_PERCENT"
+          },
+          {
+            "if": "SPREAD_RETURN >= 2.0",
+            "action": "SELL_ALL"
+          }
+        ],
+        "max_position_size": 0.05
+      }
+    ],
+    "enable_condition": "MARKET_STATE != 'BEAR'",
+    "disabled_in_bear": "所有买方期权策略暂停，已有卖方策略可继续收租"
+  },
+
+  "risk_management": {
+    "stock_stop_loss": {
+      "core_threshold": -0.20,
+      "core_action": "REDUCE_HALF",
+      "satellite_threshold": -0.25,
+      "satellite_action": "SELL_ALL"
+    },
+    "option_stop_loss": {
+      "buyer_threshold": -0.50,
+      "buyer_action": "CLOSE_POSITION",
+      "seller_threshold": "LOSS > PREMIUM_COLLECTED * 2",
+      "seller_action": "CLOSE_OR_ROLL"
+    },
+    "drawdown_control": {
+      "daily_loss_limit": -0.03,
+      "daily_action": "STOP_NEW_POSITIONS_FOR_DAY",
+      "portfolio_max_drawdown": -0.20,
+      "drawdown_action": "REDUCE_ALL_POSITIONS_50_PERCENT"
+    },
+    "consecutive_loss_rule": {
+      "max_consecutive_option_losses": 3,
+      "action": "PAUSE_OPTIONS_30_DAYS"
+    },
+    "position_limit": {
+      "max_single_stock": 0.20,
+      "max_single_sector": 0.70,
+      "max_option_margin_usage": 0.30
+    }
+  },
+
+  "execution_schedule": {
+    "daily": {
+      "timezone": "Asia/Shanghai",
+      "steps": [
+        {
+          "time": "20:45",
+          "action": "SOCIAL_SENTIMENT_BRIEF",
+          "details": ["RUN_INTEL_MONITOR", "DERIVE_SOCIAL_SENTIMENT_FEED", "UPDATE_RESEARCH_COMMITTEE_INPUT", "REFRESH_DASHBOARD_SNAPSHOT"]
+        },
+        {
+          "time": "21:25",
+          "action": "PRE_MARKET_SCAN",
+          "details": ["GET_MA50_MA200", "CALC_MARKET_STATE", "CHECK_STOP_LOSS", "CHECK_STOP_PROFIT", "CHECK_OPTION_EXPIRY"]
+        },
+        {
+          "time": "21:30",
+          "action": "OPENING_SIGNALS",
+          "details": ["CHECK_ENTRY_SIGNALS", "PLACE_LIMIT_ORDERS_IF_TRIGGERED"]
+        },
+        {
+          "time": "00:00",
+          "action": "MID_DAY_REVIEW",
+          "details": ["CHECK_ORDER_STATUS", "MONITOR_INTRADAY_LOSS_LIMIT"]
+        },
+        {
+          "time": "04:00",
+          "action": "POST_MARKET_SUMMARY",
+          "details": ["UPDATE_POSITION_RECORD", "SEND_DAILY_REPORT"]
+        }
+      ],
+      "trading_days_only": true,
+      "trading_hours_et": "09:30-16:00",
+      "trading_hours_bj_dst": "21:30-04:00"
+    },
+    "weekly": {
+      "day": "SATURDAY",
+      "time": "10:00",
+      "timezone": "Asia/Shanghai",
+      "steps": [
+        "CALC_30D_MOMENTUM_ALL_STOCKS",
+        "RANK_BY_ANALYST_UPSIDE",
+        "CHECK_REBALANCE_THRESHOLD",
+        "GENERATE_REBALANCE_PROPOSAL",
+        "SEND_WEEKLY_REPORT"
+      ]
+    },
+    "monthly": {
+      "day": "1st",
+      "steps": [
+        "INJECT_MONTHLY_DCA_CAPITAL",
+        "FULL_REBALANCE",
+        "UPDATE_LEADER_FOLLOWER_LIST",
+        "SEND_MONTHLY_REPORT"
+      ]
+    }
+  },
+
+  "reporting": {
+    "daily": {
+      "content": ["portfolio_value", "daily_pnl", "open_orders", "option_positions", "market_state", "social_sentiment", "crowding_risk"],
+      "channel": "hi_message"
+    },
+    "weekly": {
+      "content": ["weekly_pnl", "position_changes", "momentum_ranking", "rebalance_proposal", "next_week_outlook"],
+      "channel": "hi_message"
+    },
+    "monthly": {
+      "content": ["monthly_pnl", "cumulative_return", "goal_progress", "capital_injection_status", "strategy_review"],
+      "channel": "hi_message"
+    }
+  },
+
+  "notes": {
+    "real_account_safety": "所有实盘交易只生成审批草案；当前脚本不解锁账户、不存密码、不下实盘单",
+    "paper_first": "建议先用ADVISORY_ONLY生成建议和报告，再显式开启SIMULATE_AUTO进行模拟盘验证",
+    "data_source": "moomoo OpenAPI direct SDK or manually supplied market/account data",
+    "last_updated": "2026-05-05"
+  }
+}
