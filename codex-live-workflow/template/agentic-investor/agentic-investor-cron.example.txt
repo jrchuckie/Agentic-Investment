@@ -1,0 +1,15 @@
+# Example Windows Task Scheduler commands.
+# Times should be created in the machine's local timezone.
+
+# Morning brief, 09:00 Asia/Shanghai
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_opening_decision_push.ps1" "morning brief"
+
+# Opening checks after US open
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_opening_decision_push.ps1" "open +15m"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_opening_decision_push.ps1" "open +30m"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_opening_decision_push.ps1" "open +45m"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_opening_decision_push.ps1" "open +60m"
+
+# Reduction guard
+powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\Documents\New project\agentic-investor\scripts\run_reduction_guard.ps1" --push --force-push
+
