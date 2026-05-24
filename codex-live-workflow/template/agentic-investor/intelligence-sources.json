@@ -1,0 +1,278 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-21T11:05:00+08:00",
+  "policy": {
+    "purpose": "Daily/weekly AI, finance, macro, and watchlist intelligence monitoring.",
+    "trading_policy": "Intelligence can promote an item to research or watchlist review, but it cannot create a buy/sell signal by itself.",
+    "x_policy": "Use official X API, OpenCLI Browser Bridge, or user-supplied links as social evidence only.",
+    "reddit_policy": "Use public Reddit RSS/API or OpenCLI where available; treat discussion volume as noisy sentiment, not investment proof."
+  },
+  "social_media_monitoring": {
+    "daily_cron_id": "daily-us-market-sentiment-brief",
+    "normalized_output": "data/social_sentiment/latest.json",
+    "dashboard_section": "sentiment",
+    "reddit_communities": ["stocks", "investing", "ValueInvesting", "SecurityAnalysis", "wallstreetbets", "options", "Semiconductors", "MachineLearning", "singularity", "artificial", "Bogleheads"],
+    "x_mode": "opencli_or_official_api_or_user_links",
+    "x_kols": [
+      {
+        "name": "Leopold Aschenbrenner",
+        "handle": "leopoldasch",
+        "url": "https://x.com/leopoldasch",
+        "domain": "AGI race, AI infrastructure, trillion-dollar clusters, data center power",
+        "priority": 0.9,
+        "why": "Author of Situational Awareness; useful for AI physical infrastructure and AGI capex narrative shifts."
+      }
+    ],
+    "xhs_mode": "opencli_search_and_manual_link_queue",
+    "xhs_kols": ["xhs_us_stock_kol_1", "xhs_us_stock_kol_2", "Yoki_FIRE", "us_stock_note_queue"],
+    "judgement_policy": "Use social sentiment as narrative/crowding overlay only; never as a standalone trade trigger."
+  },
+  "themes": [
+    "AI capex",
+    "AI demand transmission lag",
+    "AI supply chain repricing",
+    "AI customer qualification cycle",
+    "AI architecture new node",
+    "AI inference storage",
+    "PCIe CXL retimer",
+    "1.6T optical interconnect",
+    "semiconductor cycle",
+    "AI infrastructure",
+    "cloud spending",
+    "Fed rates",
+    "inflation",
+    "export controls",
+    "tariffs",
+    "data center power",
+    "AI physical infrastructure",
+    "trillion-dollar cluster",
+    "AGI race",
+    "stablecoin regulation",
+    "crypto market structure",
+    "corporate action",
+    "takeover bid",
+    "meme stock risk",
+    "enterprise software demand"
+  ],
+  "thought_leaders": [
+    {"name": "Jensen Huang", "domain": "AI infrastructure", "source_mode": "news_or_official_links"},
+    {"name": "Satya Nadella", "domain": "cloud and AI software", "source_mode": "news_or_official_links"},
+    {"name": "Sam Altman", "domain": "AI adoption", "source_mode": "news_or_x_api"},
+    {"name": "Dario Amodei", "domain": "frontier AI", "source_mode": "news_or_x_api"},
+    {"name": "Demis Hassabis", "domain": "frontier AI", "source_mode": "news_or_x_api"},
+    {"name": "Andrej Karpathy", "domain": "AI developer sentiment", "source_mode": "x_api_or_user_links"},
+    {"name": "Andrew Ng", "domain": "AI education and adoption", "source_mode": "news_or_x_api"},
+    {"name": "Yann LeCun", "domain": "AI research debate", "source_mode": "x_api_or_user_links"},
+    {"name": "Leopold Aschenbrenner", "domain": "AGI race and AI physical infrastructure", "source_mode": "x_api_or_user_links", "x_handle": "leopoldasch", "url": "https://x.com/leopoldasch", "aliases": ["Leopold", "leopoldasch", "@leopoldasch", "Situational Awareness", "trillion-dollar cluster"]},
+    {"name": "Dylan Patel", "domain": "semiconductor and AI supply chain", "source_mode": "newsletter_or_news"},
+    {"name": "Ben Thompson", "domain": "technology strategy", "source_mode": "newsletter_or_news"},
+    {"name": "Brad Gerstner", "domain": "tech investing", "source_mode": "x_api_or_user_links"},
+    {"name": "Gavin Baker", "domain": "growth and tech investing", "source_mode": "x_api_or_user_links"},
+    {"name": "Aswath Damodaran", "domain": "valuation", "source_mode": "blog_or_news"},
+    {"name": "Howard Marks", "domain": "risk cycles", "source_mode": "memo_or_news"},
+    {"name": "Mohamed El-Erian", "domain": "macro", "source_mode": "news_or_x_api"},
+    {"name": "Nick Timiraos", "domain": "Fed policy reporting", "source_mode": "news_or_x_api"},
+    {"name": "Torsten Slok", "domain": "macro charts", "source_mode": "news_or_reports"}
+  ],
+  "public_feeds": [
+    {
+      "id": "fed_press",
+      "label": "Federal Reserve press releases",
+      "type": "rss",
+      "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+      "priority": 1.0
+    },
+    {
+      "id": "nvidia_blog",
+      "label": "NVIDIA blog",
+      "type": "rss",
+      "url": "https://blogs.nvidia.com/feed/",
+      "priority": 0.8
+    },
+    {
+      "id": "gdelt_ai_semis_us_news",
+      "label": "GDELT global news: AI / semis / Fed",
+      "type": "gdelt_doc",
+      "url": "https://api.gdeltproject.org/api/v2/doc/doc?query=(NVDA%20OR%20AMD%20OR%20GOOG%20OR%20PLTR%20OR%20CRCL%20OR%20Circle%20OR%20stablecoin%20OR%20GME%20OR%20GameStop%20OR%20EBAY%20OR%20eBay%20OR%20semiconductor%20OR%20%22AI%20capex%22%20OR%20Fed)&mode=ArtList&format=json&maxrecords=40&sort=hybridrel",
+      "priority": 0.75
+    },
+    {
+      "id": "google_news_nvda_earnings",
+      "label": "Google News: NVDA earnings and AI capex event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(NVDA%20OR%20Nvidia%20OR%20NVIDIA%20OR%20%22AI%20factory%22%20OR%20%22data%20center%20revenue%22)%20(earnings%20OR%20guidance%20OR%20Rubin%20OR%20Blackwell)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.8
+    },
+    {
+      "id": "google_news_crypto_payments",
+      "label": "Google News: crypto / stablecoin / payments event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(CRCL%20OR%20%22Circle%20Internet%22%20OR%20COIN%20OR%20Coinbase%20OR%20USDC%20OR%20stablecoin%20OR%20%22CLARITY%20Act%22%20OR%20%22GENIUS%20Act%22)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.65
+    },
+    {
+      "id": "google_news_market_movers",
+      "label": "Google News: US stock market movers event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(%22stock%20jumps%22%20OR%20%22shares%20surge%22%20OR%20%22shares%20jump%22%20OR%20%22stock%20falls%22%20OR%20%22shares%20sink%22%20OR%20%22stock%20plunges%22%20OR%20%22after%20earnings%22%20OR%20%22after%20guidance%22)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.7
+    },
+    {
+      "id": "google_news_analyst_actions",
+      "label": "Google News: analyst upgrade / downgrade event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(%22stock%20upgrade%22%20OR%20%22shares%20upgraded%22%20OR%20%22stock%20downgrade%22%20OR%20%22price%20target%22%20OR%20%22initiates%20coverage%22)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.45
+    },
+    {
+      "id": "google_news_corporate_actions",
+      "label": "Google News: corporate action / meme stock event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(GME%20OR%20GameStop%20OR%20EBAY%20OR%20eBay%20OR%20takeover%20OR%20acquisition%20OR%20bid)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.65
+    },
+    {
+      "id": "google_news_ai_storage_memory",
+      "label": "Google News: AI storage / memory event radar",
+      "type": "rss",
+      "url": "https://news.google.com/rss/search?q=(MU%20OR%20Micron%20OR%20WDC%20OR%20%22Western%20Digital%22%20OR%20STX%20OR%20Seagate%20OR%20PSTG%20OR%20%22Pure%20Storage%22%20OR%20NTAP%20OR%20NetApp%20OR%20HBM%20OR%20NAND%20OR%20%22AI%20storage%22%20OR%20%22data%20storage%22)%20when:1d&hl=en-US&gl=US&ceid=US:en",
+      "priority": 0.62
+    },
+    {
+      "id": "reddit_stocks_ai",
+      "label": "Reddit stocks AI search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/stocks/search.rss?q=AI%20OR%20NVDA%20OR%20semiconductor&restrict_sr=1&sort=new",
+      "priority": 0.45
+    },
+    {
+      "id": "reddit_investing_ai",
+      "label": "Reddit investing AI search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/investing/search.rss?q=AI%20OR%20semiconductor%20OR%20Fed&restrict_sr=1&sort=new",
+      "priority": 0.45
+    },
+    {
+      "id": "reddit_options_watchlist",
+      "label": "Reddit options watchlist search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/options/search.rss?q=NVDA%20OR%20AMD%20OR%20GOOG%20OR%20PLTR&restrict_sr=1&sort=new",
+      "priority": 0.35
+    },
+    {
+      "id": "reddit_valueinvesting_ai",
+      "label": "Reddit ValueInvesting AI search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/ValueInvesting/search.rss?q=AI%20OR%20semiconductor%20OR%20NVDA%20OR%20GOOG&restrict_sr=1&sort=new",
+      "priority": 0.35
+    },
+    {
+      "id": "reddit_securityanalysis_ai",
+      "label": "Reddit SecurityAnalysis AI search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/SecurityAnalysis/search.rss?q=AI%20OR%20semiconductor%20OR%20cloud%20OR%20capex&restrict_sr=1&sort=new",
+      "priority": 0.4
+    },
+    {
+      "id": "reddit_wallstreetbets_ai",
+      "label": "Reddit wallstreetbets AI/options search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/wallstreetbets/search.rss?q=NVDA%20OR%20AMD%20OR%20PLTR%20OR%20AI&restrict_sr=1&sort=new",
+      "priority": 0.25
+    },
+    {
+      "id": "reddit_semiconductors_ai",
+      "label": "Reddit Semiconductors AI search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/Semiconductors/search.rss?q=AI%20OR%20GPU%20OR%20AMD%20OR%20NVDA%20OR%20TSMC&restrict_sr=1&sort=new",
+      "priority": 0.45
+    },
+    {
+      "id": "reddit_machinelearning_ai",
+      "label": "Reddit MachineLearning industry search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/MachineLearning/search.rss?q=GPU%20OR%20inference%20OR%20AI%20infrastructure&restrict_sr=1&sort=new",
+      "priority": 0.3
+    },
+    {
+      "id": "reddit_singularity_ai",
+      "label": "Reddit singularity AI adoption search",
+      "type": "rss",
+      "url": "https://www.reddit.com/r/singularity/search.rss?q=AI%20OR%20GPU%20OR%20data%20center%20OR%20robotaxi&restrict_sr=1&sort=new",
+      "priority": 0.25
+    }
+  ],
+  "manual_link_queue": [
+    {
+      "source": "xiaohongshu",
+      "kol": "us_stock_note_queue",
+      "url": "https://www.xiaohongshu.com/explore/69fa96c9000000003700ca82",
+      "theme": "AI supply-chain repricing: demand transmission lag, Qual cycle, architecture new nodes",
+      "symbols": ["SNDK", "MU", "AMD", "ALAB", "MRVL", "LITE", "POET"],
+      "policy": "Narrative discovery only; can raise research priority but cannot independently trigger trades."
+    },
+    {
+      "source": "twitter_opencli",
+      "kol": "wallstengine",
+      "url": "https://x.com/i/status/2057195521144713471",
+      "theme": "NVDA Q1 FY27 earnings beat and Q2 guide, no China data center compute revenue assumed",
+      "symbols": ["NVDA", "AMD", "PLTR", "CRWV", "GOOG", "AMZN"],
+      "policy": "Social evidence only; use as crowding and narrative overlay."
+    },
+    {
+      "source": "twitter_opencli",
+      "kol": "munster_gene",
+      "url": "https://x.com/i/status/2057198240269754705",
+      "theme": "NVDA capacity and inventory commentary suggests near-term growth is demand-realization rather than supply-limited",
+      "symbols": ["NVDA", "AMD", "MU", "MRVL", "ALAB"],
+      "policy": "Social evidence only; verify against company filings before any trade decision."
+    },
+    {
+      "source": "reddit_opencli",
+      "kol": "r/NVDA_Stock",
+      "url": "https://www.reddit.com/r/NVDA_Stock/comments/1tixveg/q1_fy27_was_absolutely_insane/",
+      "theme": "Retail NVDA earnings crowding after record revenue, data center growth, buyback and dividend increase",
+      "symbols": ["NVDA"],
+      "policy": "Crowding overlay only; not a standalone signal."
+    },
+    {
+      "source": "xiaohongshu_opencli",
+      "kol": "JamesDC",
+      "url": "https://www.xiaohongshu.com/search_result/6a0e1d870000000010001c01",
+      "theme": "Chinese retail discussion says NVIDIA report double-beat and margin near 75 percent",
+      "symbols": ["NVDA", "AMD"],
+      "policy": "Crowding overlay only; not a standalone signal."
+    },
+    {
+      "source": "twitter_opencli",
+      "kol": "SenLummis",
+      "url": "https://x.com/i/status/2057095497425248461",
+      "theme": "CLARITY Act political push and US digital asset regulatory leadership narrative",
+      "symbols": ["CRCL", "COIN"],
+      "policy": "Regulatory catalyst overlay only; verify bill timing before any action."
+    },
+    {
+      "source": "twitter_opencli",
+      "kol": "HyperAICapital",
+      "url": "https://x.com/i/status/2057225322840613146",
+      "theme": "NVDA call fuels AI physical infrastructure speculation around CRWV, NBIS and compute providers",
+      "symbols": ["NVDA", "CRWV", "NBIS", "IREN", "CORZ", "BE"],
+      "policy": "Speculative social evidence only; require fundamentals and price confirmation."
+    }
+  ],
+  "x_api": {
+    "enabled": false,
+    "bearer_token_env": "X_BEARER_TOKEN",
+    "note": "OpenCLI Browser Bridge is available for logged-in X review; X API credentials remain optional."
+  },
+  "alert_rules": {
+    "minimum_score_for_report": 2,
+    "high_score_threshold": 5,
+    "watchlist_symbol_hit_weight": 3,
+    "theme_hit_weight": 1,
+    "thought_leader_hit_weight": 2,
+    "event_hit_weight": 2,
+    "candidate_symbol_hit_weight": 1,
+    "source_priority_weight": 2
+  }
+}
