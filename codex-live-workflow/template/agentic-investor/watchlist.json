@@ -1,0 +1,351 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-05-05T18:59:39+08:00",
+  "policy": {
+    "purpose": "Human-in-the-loop idea intake for social buzz, user ideas, and fund/quant candidates.",
+    "default_status": "research_candidate",
+    "order_policy": "Watchlist entries can generate research notes and entry proposals only. They must not trigger broker orders by themselves.",
+    "approval_policy": "A candidate needs user approval plus risk review before it can enter any simulated or real portfolio proposal."
+  },
+  "symbol_aliases": {
+    "INTEL": "INTC",
+    "$INTC": "INTC",
+    "SANDISK": "SNDK",
+    "$SNDK": "SNDK",
+    "$CRCL": "CRCL",
+    "$GME": "GME",
+    "$EBAY": "EBAY",
+    "$TEM": "TEM",
+    "TEMPUS": "TEM",
+    "TEMPUS AI": "TEM",
+    "$BE": "BE",
+    "BLOOM ENERGY": "BE",
+    "$CRWV": "CRWV",
+    "COREWEAVE": "CRWV",
+    "$CORZ": "CORZ",
+    "CORE SCIENTIFIC": "CORZ",
+    "$ALAB": "ALAB",
+    "ASTERA LABS": "ALAB",
+    "$MRVL": "MRVL",
+    "MARVELL": "MRVL",
+    "$LITE": "LITE",
+    "LUMENTUM": "LITE",
+    "$POET": "POET",
+    "POET TECHNOLOGIES": "POET"
+  },
+  "watchlist": [
+    {
+      "symbol": "CRCL",
+      "normalized_symbol": "CRCL",
+      "status": "research_candidate",
+      "source": "user_event_radar",
+      "added_at": "2026-05-05T11:20:00+08:00",
+      "thesis": "Circle / stablecoin regulation momentum candidate after the May 4, 2026 CRCL move. Track CLARITY Act progress, crypto beta, USDC economics, valuation, liquidity, and reversal risk before any entry proposal.",
+      "urls": [
+        "https://www.theblock.co/post/399973/crypto-stocks-rally-circle-jumps",
+        "https://finviz.com/quote?t=CRCL"
+      ],
+      "tags": [
+        "stablecoin",
+        "crypto-regulation",
+        "high-momentum",
+        "event-radar"
+      ],
+      "keywords": [
+        "Circle Internet",
+        "Circle stock",
+        "USDC",
+        "stablecoin",
+        "CLARITY Act",
+        "$CRCL"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "GME",
+      "normalized_symbol": "GME",
+      "status": "research_candidate",
+      "source": "user_event_radar",
+      "added_at": "2026-05-05T11:20:00+08:00",
+      "thesis": "GameStop / eBay unsolicited takeover bid catalyst. Treat as meme-stock and corporate-action risk signal; monitor financing feasibility, dilution risk, eBay board response, and social crowding.",
+      "urls": [
+        "https://www.theguardian.com/technology/2026/may/04/gamestop-takeover-offer-ebay-bid"
+      ],
+      "tags": [
+        "corporate-action",
+        "meme-stock",
+        "event-risk",
+        "needs-official-verification"
+      ],
+      "keywords": [
+        "GameStop",
+        "Ryan Cohen",
+        "$GME"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "EBAY",
+      "normalized_symbol": "EBAY",
+      "status": "research_candidate",
+      "source": "user_event_radar",
+      "added_at": "2026-05-05T11:20:00+08:00",
+      "thesis": "eBay takeover-target candidate after GameStop's unsolicited offer. Track spread versus proposed $125/share consideration, board response, deal financing risk, and competing-bid probability.",
+      "urls": [
+        "https://www.cbsnews.com/news/gamestop-ebay-takeover-bid-ryan-cohen/"
+      ],
+      "tags": [
+        "corporate-action",
+        "takeover-target",
+        "deal-spread",
+        "event-radar"
+      ],
+      "keywords": [
+        "eBay",
+        "$EBAY"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "SIVEF",
+      "normalized_symbol": "SIVEF",
+      "status": "research_candidate",
+      "source": "user_example",
+      "added_at": "2026-05-03T00:00:00+08:00",
+      "thesis": "Example social-buzz candidate from user. Needs ticker normalization, data-source support check, liquidity check, and catalyst review.",
+      "urls": [],
+      "tags": [
+        "social-buzz",
+        "needs-data-check"
+      ],
+      "conviction": "unrated"
+    },
+    {
+      "symbol": "INTEL",
+      "normalized_symbol": "INTC",
+      "status": "research_candidate",
+      "source": "user_example",
+      "added_at": "2026-05-03T00:00:00+08:00",
+      "thesis": "Example user candidate. Normalize Intel to INTC before quote, backtest, and risk review.",
+      "urls": [],
+      "tags": [
+        "large-cap",
+        "turnaround",
+        "needs-thesis-check"
+      ],
+      "conviction": "unrated"
+    },
+    {
+      "symbol": "TEM",
+      "normalized_symbol": "TEM",
+      "status": "research_candidate",
+      "source": "user_watchlist",
+      "added_at": "2026-05-05T18:59:39+08:00",
+      "thesis": "Tempus AI / precision medicine AI platform. Track as AI healthcare data candidate: revenue growth, earnings path, clinical data moat, Google/healthcare ecosystem links, valuation, liquidity, and post-earnings volatility before any entry proposal.",
+      "urls": [
+        "https://stockanalysis.com/stocks/tem/"
+      ],
+      "tags": [
+        "ai-healthcare",
+        "precision-medicine",
+        "watchlist",
+        "event-radar"
+      ],
+      "keywords": [
+        "Tempus AI",
+        "Tempus",
+        "precision medicine",
+        "AI healthcare",
+        "$TEM"
+      ],
+      "conviction": "unrated"
+    },
+    {
+      "symbol": "BE",
+      "normalized_symbol": "BE",
+      "status": "research_candidate",
+      "source": "user_fund_watchlist",
+      "added_at": "2026-05-06T00:25:00+08:00",
+      "thesis": "Bloom Energy / AI physical infrastructure power candidate from Situational Awareness LP holdings. Track data-center power demand, fuel-cell economics, backlog, margins, policy support, valuation, and volatility before any entry proposal.",
+      "urls": [
+        "https://www.sec.gov/Archives/edgar/data/2045724/000204572426000002/xslForm13F_X02/SALP_13FQ425.xml"
+      ],
+      "tags": [
+        "ai-physical-infrastructure",
+        "power",
+        "data-center-energy",
+        "situational-awareness-lp",
+        "fund-watchlist"
+      ],
+      "keywords": [
+        "Bloom Energy",
+        "data center power",
+        "fuel cell",
+        "$BE"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "CRWV",
+      "normalized_symbol": "CRWV",
+      "status": "research_candidate",
+      "source": "user_fund_watchlist",
+      "added_at": "2026-05-06T00:25:00+08:00",
+      "thesis": "CoreWeave / AI cloud compute capacity candidate from Situational Awareness LP holdings. Track GPU capacity growth, customer concentration, debt/capex intensity, pricing, utilization, and lock-up/valuation risk before any entry proposal.",
+      "urls": [
+        "https://www.sec.gov/Archives/edgar/data/2045724/000204572426000002/xslForm13F_X02/SALP_13FQ425.xml"
+      ],
+      "tags": [
+        "ai-physical-infrastructure",
+        "gpu-cloud",
+        "compute-capacity",
+        "situational-awareness-lp",
+        "fund-watchlist"
+      ],
+      "keywords": [
+        "CoreWeave",
+        "AI cloud",
+        "GPU capacity",
+        "$CRWV"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "CORZ",
+      "normalized_symbol": "CORZ",
+      "status": "research_candidate",
+      "source": "user_fund_watchlist",
+      "added_at": "2026-05-06T00:25:00+08:00",
+      "thesis": "Core Scientific / AI data-center and power-adjacent capacity candidate from Situational Awareness LP holdings. Track hosting contracts, power capacity, balance sheet, crypto beta, AI/HPC transition, and event risk before any entry proposal.",
+      "urls": [
+        "https://www.sec.gov/Archives/edgar/data/2045724/000204572426000002/xslForm13F_X02/SALP_13FQ425.xml"
+      ],
+      "tags": [
+        "ai-physical-infrastructure",
+        "data-center",
+        "power-capacity",
+        "situational-awareness-lp",
+        "fund-watchlist"
+      ],
+      "keywords": [
+        "Core Scientific",
+        "AI data center",
+        "HPC hosting",
+        "$CORZ"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "ALAB",
+      "normalized_symbol": "ALAB",
+      "status": "research_candidate",
+      "source": "xhs_mungerjun_ai_chain_framework",
+      "added_at": "2026-05-06T16:30:00+08:00",
+      "thesis": "Astera Labs / PCIe-CXL retimer and connectivity candidate. Track whether AI server architecture makes retimers a mandatory new node; verify revenue growth, customer concentration, valuation, and post-earnings price confirmation before any paper entry.",
+      "urls": [
+        "https://www.xiaohongshu.com/explore/69fa96c9000000003700ca82"
+      ],
+      "tags": [
+        "ai-supply-chain-repricing",
+        "architecture-new-node",
+        "retimer",
+        "xhs-kol"
+      ],
+      "keywords": [
+        "Astera Labs",
+        "retimer",
+        "PCIe",
+        "CXL",
+        "$ALAB"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "MRVL",
+      "normalized_symbol": "MRVL",
+      "status": "research_candidate",
+      "source": "xhs_mungerjun_ai_chain_framework",
+      "added_at": "2026-05-06T16:30:00+08:00",
+      "thesis": "Marvell / 1.6T optical interconnect DSP and custom silicon repricing candidate. Track AI revenue guide, 1.6T optical DSP adoption, custom silicon pipeline, margin, and whether old networking-chip valuation is being reset.",
+      "urls": [
+        "https://www.xiaohongshu.com/explore/69fa96c9000000003700ca82"
+      ],
+      "tags": [
+        "ai-supply-chain-repricing",
+        "optical-interconnect",
+        "custom-silicon",
+        "xhs-kol"
+      ],
+      "keywords": [
+        "Marvell",
+        "1.6T",
+        "DSP",
+        "custom silicon",
+        "$MRVL"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "LITE",
+      "normalized_symbol": "LITE",
+      "status": "research_candidate",
+      "source": "xhs_mungerjun_ai_chain_framework",
+      "added_at": "2026-05-06T16:30:00+08:00",
+      "thesis": "Lumentum / optical component demand-lag candidate. Track 800G/1.6T optical cycle, AI data-center order strength, margin recovery, and whether the market is still valuing it as a weak telecom-cycle name.",
+      "urls": [
+        "https://www.xiaohongshu.com/explore/69fa96c9000000003700ca82"
+      ],
+      "tags": [
+        "ai-supply-chain-repricing",
+        "optical-components",
+        "demand-lag",
+        "xhs-kol"
+      ],
+      "keywords": [
+        "Lumentum",
+        "optical module",
+        "1.6T",
+        "$LITE"
+      ],
+      "conviction": "watch"
+    },
+    {
+      "symbol": "POET",
+      "normalized_symbol": "POET",
+      "status": "research_candidate",
+      "source": "xhs_mungerjun_ai_chain_framework",
+      "added_at": "2026-05-06T16:30:00+08:00",
+      "thesis": "POET Technologies / integrated photonics high-risk candidate. Treat as early-stage research only: verify tradeability, liquidity, revenue scale, customer validation, cash runway, and dilution risk before any paper entry.",
+      "urls": [
+        "https://www.xiaohongshu.com/explore/69fa96c9000000003700ca82"
+      ],
+      "tags": [
+        "ai-supply-chain-repricing",
+        "integrated-photonics",
+        "early-stage-high-risk",
+        "xhs-kol"
+      ],
+      "keywords": [
+        "POET Technologies",
+        "integrated photonics",
+        "optical interconnect",
+        "$POET"
+      ],
+      "conviction": "unrated"
+    }
+  ],
+  "excluded": [],
+  "sentiment_queue": [],
+  "research_rules": {
+    "minimum_checks_before_entry_proposal": [
+      "ticker_is_tradeable_in_moomoo_or_has_manual_data_source",
+      "average_dollar_volume_is_sufficient",
+      "business_and_catalyst_thesis_is_written",
+      "trend_or_reversal_setup_is_defined",
+      "max_position_size_and_stop_rule_are_defined",
+      "macro_regime_does_not_block_new_risk"
+    ],
+    "social_signal_policy": "Reddit/X discussion can promote a symbol to research, but cannot be used as a standalone buy signal.",
+    "unsupported_symbol_policy": "If moomoo cannot quote a symbol, keep it research-only until an alternate data source is confirmed."
+  }
+}
