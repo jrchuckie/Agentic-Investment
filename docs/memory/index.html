@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投资记忆库</title>
+<style>
+:root {
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --ink: #151922;
+  --muted: #667085;
+  --line: #d8dee9;
+  --blue: #2563eb;
+  --green: #0f766e;
+  --orange: #c2410c;
+  --red: #b42318;
+  --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.topbar {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+}
+.topbar h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+.topbar p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 980px;
+  line-height: 1.6;
+}
+.meta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f9fafb;
+  color: #344054;
+  font-size: 13px;
+}
+.shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+.sidebar, .detail {
+  min-height: calc(100vh - 148px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+.sidebar {
+  overflow: hidden;
+}
+.controls {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.search {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.filter {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: #344054;
+  cursor: pointer;
+}
+.filter.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: #eff6ff;
+}
+.timeline {
+  padding: 10px 12px 18px;
+  max-height: calc(100vh - 225px);
+  overflow: auto;
+}
+.day {
+  margin: 12px 0 18px;
+}
+.day h2 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #475467;
+}
+.item {
+  width: 100%;
+  display: block;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-left: 4px solid #98a2b3;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px 11px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.item:hover { border-color: #98a2b3; }
+.item.active {
+  border-color: var(--blue);
+  border-left-color: var(--blue);
+  background: #f8fbff;
+}
+.item[data-type="research"] { border-left-color: var(--green); }
+.item[data-type="decision"] { border-left-color: var(--orange); }
+.item[data-type="weekly_review"] { border-left-color: var(--blue); }
+.item strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.item small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.kind {
+  display: inline-block;
+  margin: 0 6px 5px 0;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #344054;
+  font-size: 12px;
+}
+.kind.research { background: #ecfdf3; color: var(--green); }
+.kind.decision { background: #fff7ed; color: var(--orange); }
+.kind.weekly_review { background: #eff6ff; color: var(--blue); }
+.kind.system_report { background: #f2f4f7; color: #475467; }
+.detail {
+  padding: 22px;
+  overflow: auto;
+}
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+.detail h2 {
+  margin: 8px 0 8px;
+  font-size: 26px;
+  line-height: 1.25;
+}
+.detail-summary {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.source {
+  min-width: 170px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--muted);
+}
+.chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.chip {
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: #475467;
+  font-size: 12px;
+}
+.markdown {
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfe;
+  color: #1d2939;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.62;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+}
+.empty {
+  padding: 30px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+@media (max-width: 980px) {
+  .shell { grid-template-columns: 1fr; padding: 12px; }
+  .sidebar, .detail { min-height: auto; }
+  .timeline { max-height: 52vh; }
+  .detail-header { display: block; }
+  .source { text-align: left; margin-top: 12px; }
+  .topbar { padding: 20px 18px 16px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>投资记忆库</h1>
+  <p>公开版只保留大研究结论；实盘仓位、现金、每日操作建议和风控细节留在本地，不发布到 GitHub。</p>
+  <div class="meta-row">
+    <span class="pill">生成时间：2026-06-06T00:27:39+08:00</span>
+    <span class="pill" id="countSummary">载入中</span>
+  </div>
+</header>
+<main class="shell">
+  <aside class="sidebar">
+    <div class="controls">
+      <input class="search" id="searchInput" placeholder="搜索 ticker / 主题 / 结论 / 日期">
+      <div class="filters" id="filters"></div>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </aside>
+  <section class="detail" id="detail"></section>
+</main>
+<script id="memoryPayload" type="application/json">{"generatedAt":"2026-06-06T00:27:39+08:00","sourceRoot":"public-safe","publicSafe":true,"counts":{"research":1,"decision":0,"weekly_review":0,"system_report":0},"dates":["2026-06-06"],"items":[{"id":"research-2026-06-06-investment-memory-system-v1-md","type":"research","typeLabel":"大研究","date":"2026-06-06","timestamp":"","title":"投资记忆系统 v1","summary":"每天的买卖建议和大研究结论需要沉淀成可检索、可点击、可回测的本地 HTML 记忆库。","tags":["process","memory","review"],"tickers":[],"sourcePath":"data/research_memory/research/2026-06-06_investment-memory-system-v1.md","sourceHref":"","content":"# 投资记忆系统 v1\n\n- Timestamp: 2026-06-06T00:00:00+08:00\n- Date: 2026-06-06\n- Tickers: n/a\n- Tags: process, memory, review\n\n## 一句话结论\n\n每天的买卖建议不应该只停留在聊天里；大研究、每日建议和周复盘需要沉淀成可检索、可点击、可回测的本地 HTML 记忆库。\n\n## 真瓶颈\n\n这里的瓶颈不是某一只股票，而是决策流程本身：如果没有结构化记录，就无法系统复盘“哪些建议有效、哪些建议错、哪些只是情绪驱动”。\n\n## 只是受益\n\n普通聊天记录只是受益于上下文，但不适合作为长期投资系统的事实底稿，因为它难以按时间、主题、ticker、结论和后续结果检索。\n\n## Profit Pool 判断\n\n投资收益的复盘价值来自两层：第一层是每天建议和执行结果的可回测记录；第二层是大研究结论是否真的帮助筛出更好的瓶颈公司。\n\n## Crowded Trade 判断\n\n大热主题和当日异动更容易让建议变成追涨。记录系统需要强制保存 crowded 判断、触发条件、失效条件和仓位大小，避免事后只记得对的部分。\n\n## 后续验证点\n\n- 每次大研究后追加一条 research memory。\n- 每天 17:30 盘前和 10:30 盘后追加 decision journal。\n- 每周生成一次 weekly review，比较建议、执行和后续走势。\n- 只有稳定、跨多次复盘仍成立的 lesson 才进入长期 Codex memory。\n","contentTruncated":false}]}</script>
+<script>
+const payload = JSON.parse(document.getElementById("memoryPayload").textContent);
+const labels = {
+  all: "全部",
+  research: "大研究",
+  decision: "操作建议",
+  weekly_review: "周复盘",
+  system_report: "系统报告",
+};
+const state = {
+  type: "all",
+  query: "",
+  selectedId: decodeURIComponent(location.hash.replace(/^#/, "")) || (payload.items[0] && payload.items[0].id),
+};
+const typeOrder = ["all", "research", "decision", "weekly_review", "system_report"];
+
+function esc(value) {
+  return String(value == null ? "" : value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function visibleItems() {
+  const query = state.query.trim().toLowerCase();
+  return payload.items.filter((item) => {
+    if (state.type !== "all" && item.type !== state.type) return false;
+    if (!query) return true;
+    const haystack = [
+      item.date, item.title, item.summary, item.typeLabel, item.action, item.status,
+      ...(item.tags || []), ...(item.tickers || []), item.content
+    ].join(" ").toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
+function renderFilters() {
+  const node = document.getElementById("filters");
+  node.innerHTML = typeOrder.map((type) => {
+    const count = type === "all" ? payload.items.length : (payload.counts[type] || 0);
+    return `<button class="filter ${state.type === type ? "active" : ""}" data-type="${type}">${labels[type]} ${count}</button>`;
+  }).join("");
+  node.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.type = button.dataset.type;
+      const items = visibleItems();
+      if (!items.some((item) => item.id === state.selectedId)) state.selectedId = items[0] && items[0].id;
+      render();
+    });
+  });
+}
+
+function groupByDate(items) {
+  const groups = new Map();
+  items.forEach((item) => {
+    const date = item.date || "未分类";
+    if (!groups.has(date)) groups.set(date, []);
+    groups.get(date).push(item);
+  });
+  return Array.from(groups.entries());
+}
+
+function renderTimeline() {
+  const node = document.getElementById("timeline");
+  const items = visibleItems();
+  if (!items.length) {
+    node.innerHTML = `<div class="empty">没有匹配的记忆记录。</div>`;
+    return;
+  }
+  node.innerHTML = groupByDate(items).map(([date, rows]) => `
+    <section class="day">
+      <h2>${esc(date)} · ${rows.length} 条</h2>
+      ${rows.map((item) => `
+        <button class="item ${item.id === state.selectedId ? "active" : ""}" data-id="${esc(item.id)}" data-type="${esc(item.type)}">
+          <span class="kind ${esc(item.type)}">${esc(item.typeLabel)}</span>
+          ${item.status ? `<span class="kind">${esc(item.status)}</span>` : ""}
+          <strong>${esc(item.title)}</strong>
+          <small>${esc(item.summary || item.sourcePath || "")}</small>
+        </button>`).join("")}
+    </section>
+  `).join("");
+  node.querySelectorAll(".item").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedId = button.dataset.id;
+      history.replaceState(null, "", "#" + encodeURIComponent(state.selectedId));
+      render();
+    });
+  });
+}
+
+function renderDetail() {
+  const node = document.getElementById("detail");
+  const items = visibleItems();
+  const item = payload.items.find((row) => row.id === state.selectedId) || items[0];
+  if (!item) {
+    node.innerHTML = `<div class="empty">还没有可展示的记忆。先追加研究结论或操作建议，再刷新这个页面。</div>`;
+    return;
+  }
+  state.selectedId = item.id;
+  const tags = [...(item.tickers || []), ...(item.tags || [])].filter(Boolean);
+  node.innerHTML = `
+    <div class="detail-header">
+      <div>
+        <span class="kind ${esc(item.type)}">${esc(item.typeLabel)}</span>
+        ${item.action ? `<span class="kind">${esc(item.action)}</span>` : ""}
+        <h2>${esc(item.title)}</h2>
+        <p class="detail-summary">${esc(item.summary || "暂无摘要。")}</p>
+        <div class="chips">
+          <span class="chip">${esc(item.date || "未分类日期")}</span>
+          ${tags.map((tag) => `<span class="chip">${esc(tag)}</span>`).join("")}
+        </div>
+      </div>
+      <div class="source">
+        <div>${esc(item.sourcePath || "")}</div>
+        ${item.sourceHref ? `<a href="${esc(item.sourceHref)}" target="_blank" rel="noreferrer">打开原文</a>` : ""}
+      </div>
+    </div>
+    <pre class="markdown">${esc(item.content || "")}</pre>
+  `;
+}
+
+function renderStats() {
+  const counts = payload.counts || {};
+  document.getElementById("countSummary").textContent =
+    `大研究 ${counts.research || 0} / 操作建议 ${counts.decision || 0} / 周复盘 ${counts.weekly_review || 0} / 系统报告 ${counts.system_report || 0}`;
+}
+
+function render() {
+  renderStats();
+  renderFilters();
+  renderTimeline();
+  renderDetail();
+}
+
+document.getElementById("searchInput").addEventListener("input", (event) => {
+  state.query = event.target.value;
+  const items = visibleItems();
+  if (!items.some((item) => item.id === state.selectedId)) state.selectedId = items[0] && items[0].id;
+  renderTimeline();
+  renderDetail();
+});
+
+render();
+</script>
+</body>
+</html>
